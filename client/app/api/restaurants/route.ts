@@ -35,12 +35,17 @@ export async function POST(_req: Request) {
   try {
     // Read the request body
     const body = await _req.json();
-    // I restricted the address format to start with a number and then a string like "301 Olive Ave" in the example.
-    const ADDRESS_PATTERN = /^[0-9][a-zA-Z\s.,'#-]{4,99}$/;
 
     const { name, cuisine, address, rating } = body;
-    // I also restricted the rating to be between 0-5.
-    if (!name || !cuisine || !address || !ADDRESS_PATTERN.test(address) || !rating || rating < 0 || rating > 5) {
+    // I checked the type of the fields and restricted the rating to be between 0-5.
+    if (typeof name !== 'string' ||
+        name.trim() === '' ||
+        typeof cuisine !== 'string' ||
+        cuisine.trim() === '' ||
+        typeof address !== 'string' ||
+        typeof rating !== 'number' ||
+        rating < 0 ||
+        rating > 5) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
     const { rows } = await pool.query(

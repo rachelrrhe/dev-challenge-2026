@@ -11,6 +11,11 @@ type Params = { params: { id: string } };
  */
 export async function GET(_req: Request, { params }: Params) {
   try {
+    const id = Number(params.id);
+    // I added error check if id is invalid and then check if restaurant is found.
+    if (!Number.isInteger(id) || id <= 0) {
+      return NextResponse.json({ error: 'Invalid id' }, { status: 404 });
+    }
     const { rows } = await pool.query(
       'SELECT * FROM restaurants WHERE id = $1',
       [params.id]
@@ -38,6 +43,17 @@ export async function PUT(_req: Request, _ctx: Params) {
     const { id } = _ctx.params;
     const body = await _req.json();
     const { name, cuisine, address, rating } = body;
+    // copied same validation from POST
+    if (typeof name !== 'string' ||
+        name.trim() === '' ||
+        typeof cuisine !== 'string' ||
+        cuisine.trim() === '' ||
+        typeof address !== 'string' ||
+        typeof rating !== 'number' ||
+        rating < 0 ||
+        rating > 5) {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
     const { rows } = await pool.query(
       'UPDATE restaurants SET name = $1, cuisine = $2, address = $3, rating = $4 WHERE id = $5 RETURNING *',
       [name, cuisine, address, rating, id]
