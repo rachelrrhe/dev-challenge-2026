@@ -42,6 +42,10 @@ export async function PUT(_req: Request, _ctx: Params) {
   try {
     const { id } = _ctx.params;
     const body = await _req.json();
+    const id_number = Number(_ctx.params.id);
+    if (!Number.isInteger(id_number) || id_number <= 0) {
+      return NextResponse.json({ error: 'Invalid id' }, { status: 404 });
+    }
     const { name, cuisine, address, rating } = body;
     // copied same validation from POST
     if (typeof name !== 'string' ||
@@ -56,7 +60,7 @@ export async function PUT(_req: Request, _ctx: Params) {
     }
     const { rows } = await pool.query(
       'UPDATE restaurants SET name = $1, cuisine = $2, address = $3, rating = $4 WHERE id = $5 RETURNING *',
-      [name, cuisine, address, rating, id]
+      [name, cuisine, address, rating, id_number]
     );
     if (rows.length === 0) {
       return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 });
@@ -81,6 +85,10 @@ export async function PUT(_req: Request, _ctx: Params) {
 export async function DELETE(_req: Request, _ctx: Params) {
   try {
     const { id } = _ctx.params;
+    const id_number = Number(_ctx.params.id);
+    if (!Number.isInteger(id_number) || id_number <= 0) {
+      return NextResponse.json({ error: 'Invalid id' }, { status: 404 });
+    }
     const { rowCount } = await pool.query(
       'DELETE FROM restaurants WHERE id = $1',
       [id]
