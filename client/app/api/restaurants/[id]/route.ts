@@ -34,7 +34,21 @@ export async function GET(_req: Request, { params }: Params) {
  * record (or 404 if it doesn't exist). Validate the body the same way POST does.
  */
 export async function PUT(_req: Request, _ctx: Params) {
-  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
+  try {
+    const { id } = _ctx.params;
+    const body = await _req.json();
+    const { name, cuisine, address, rating } = body;
+    const { rows } = await pool.query(
+      'UPDATE restaurants SET name = $1, cuisine = $2, address = $3, rating = $4 WHERE id = $5 RETURNING *',
+      [name, cuisine, address, rating, id]
+    );
+    if (rows.length === 0) {
+      return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 });
+    }
+    return NextResponse.json(toRestaurant(rows[0]));
+  } catch (err) {
+    return handleError(err);
+  }
 }
 
 /**
@@ -49,5 +63,17 @@ export async function PUT(_req: Request, _ctx: Params) {
  * write-up.
  */
 export async function DELETE(_req: Request, _ctx: Params) {
-  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
+  try {
+    const { id } = _ctx.params;
+    const { rowCount } = await pool.query(
+      'DELETE FROM restaurants WHERE id = $1',
+      [id]
+    );
+    if (rowCount === 0) {
+      return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 });
+    }
+    return NextResponse.json(null, { status: 204 });
+  } catch (err) {
+    return handleError(err);
+  }
 }
