@@ -32,5 +32,18 @@ export async function GET() {
  * bad bodies with a 400 rather than letting them reach the database.
  */
 export async function POST(_req: Request) {
-  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
+  try {
+    // Read the request body
+    const body = await _req.json();
+
+    const { name, location, rating } = body;
+    const { rows } = await pool.query(
+      'INSERT INTO restaurants (name, location, rating) VALUES ($1, $2, $3) RETURNING *',
+      [name, location, rating]
+    );
+
+    return NextResponse.json(toRestaurant(rows[0]), { status: 201 });
+  } catch (err) {
+    return handleError(err);
+  }
 }
