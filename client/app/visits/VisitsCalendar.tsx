@@ -44,6 +44,11 @@ export function VisitsCalendar({ visits, restaurants }: Props) {
     setYear(newYear);
   }
 
+  function goToYear(delta: number) {
+    setSlideDir(delta > 0 ? 'left' : 'right');
+    setYear(year + delta);
+  }
+
   const restaurantById = useMemo(
     () => new Map(restaurants.map((r) => [r.id, r])),
     [restaurants]
@@ -293,19 +298,45 @@ export function VisitsCalendar({ visits, restaurants }: Props) {
         </>
       ) : (
         <>
-          <div className="mb-4 rounded-xl bg-gray-100 p-3">
-            <div className="mb-2 text-center text-2xl font-semibold leading-tight">{year}</div>
-            <div className="grid grid-cols-4 gap-2">
-              {MONTH_LABELS.map((label, i) => (
-                <div
-                  key={label}
-                  className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md text-sm font-semibold text-gray-800"
-                  style={monthShade(monthlyTotals[i])}
-                >
-                  <span>{label.slice(0, 3)}</span>
-                  <span className="text-xs font-normal">${Math.round(monthlyTotals[i])}</span>
-                </div>
-              ))}
+          <div className="mb-4">
+            <div className="mb-2 grid grid-cols-[auto_1fr_auto] items-center">
+              <button
+                type="button"
+                onClick={() => goToYear(-1)}
+                aria-label="Previous year"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-xs"
+              >
+                ‹
+              </button>
+              <div className="text-center text-2xl font-semibold leading-tight">{year}</div>
+              <button
+                type="button"
+                onClick={() => goToYear(1)}
+                aria-label="Next year"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-xs"
+              >
+                ›
+              </button>
+            </div>
+
+            <div
+              key={year}
+              className={`rounded-xl bg-gray-100 p-3 ${
+                slideDir === 'left' ? 'animate-slide-in-left' : 'animate-slide-in-right'
+              }`}
+            >
+              <div className="grid grid-cols-4 gap-2">
+                {MONTH_LABELS.map((label, i) => (
+                  <div
+                    key={label}
+                    className="flex aspect-square flex-col items-center justify-center gap-1 rounded-md text-sm font-semibold text-gray-800"
+                    style={monthShade(monthlyTotals[i])}
+                  >
+                    <span>{label.slice(0, 3)}</span>
+                    <span className="text-xs font-normal">${Math.round(monthlyTotals[i])}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
