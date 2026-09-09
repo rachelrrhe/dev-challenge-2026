@@ -14,7 +14,7 @@ I chose to build this because it serves the main purpose of tracking Brennen's v
 
 ## 2. What did you decide, and what did you rule out?
 
-I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer. I added dish_photo for restaurants to make it more visually appealing and updated_at to distinct cases of revisiting the same restaurant.
+I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer so I abandoned the notes in visits table. I added dish_photo for restaurants to make it more visually appealing and updated_at to distinct cases of revisiting the same restaurant.
 I merged my initial idea of My Visits and My Spending page together into the VisitsCalendar. So the route /api/spending and the spending types in apiClient were all abandoned. Instead I added VisitWithRestaurant, RestaurantSpending, and SpendingSummary interfaces for storing spending and number of visits by restaurant, date, and the sum.
 
 ## 3. Where did you cut corners?
@@ -31,10 +31,13 @@ I used AI for many frontend features in this code, and I still think my current 
 
 | Method and path | What it does | Success | Errors       |
 | --------------- | ------------ | ------- | ------------ |
-| `GET /api/visits`|List visit (joining restaurant info) from most recent in descending order | `200` if successful| -|
-| `POST /api/...` |              | `201` + | `400` on ... |
-
-**`POST /api/...`**
+| `Get /api/restaurants` | Return restaurant (added dish_photo and updated_at for each) | `200` + JSON array| - |
+| `POST /api/restaurants` | Create new restaurant (containing an optional dish_photo) | `201` + created restaurant | `400` if invalid input or duplicate|
+| `GET /api/restaurants/:id` and `PUT /api/restaurants/:id` and `DELETE /api/restaurants/:id`| ... same as before | same | same|
+| `PATCH /api/restaurants/:id` | Update updated_at and dish_photo restaurant if its revisited| `200` + updated restaurant| `400` if invalid input; `404` if missing restaurant |
+| `GET /api/visits`|Returns every visit, most recent first, with the restaurant name joined in | `200` + JSON array| - |
+| `POST /api/visits` |Record a new visit, updates the restaurant | `201` + created visit | `400` on invalid input; `404` if restaurant body don't exist|
+| `DELETE /api/visits/:id` | Delete a visit log (by clicking button on home page) | `204`, no body |`404` if missing or or invalid id |
 
 ```jsonc
 // request

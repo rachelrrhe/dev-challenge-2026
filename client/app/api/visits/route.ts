@@ -25,7 +25,7 @@ export async function GET() {
 
 /**
  * POST /api/visits
- * Record a visit to an existing restaurant. If
+ * Record a new visit (seperate from updating restaurant). If
  * a dish photo was submitted, it is updated to the restaurant as its latest photo.
  *
  * Body: { restaurantId: number, amountSpent: number, date?: "YYYY-MM-DD", notes?: string, dishPhoto?: string }
