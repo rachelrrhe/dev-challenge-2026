@@ -9,14 +9,15 @@
 > accomplishments. **Submit this even if you didn't finish** - see CHALLENGE.md.
 
 ## 1. What did you build for Part B, and why that?
-
-> What made you pick it over everything else you could have built? This is the
-> question we care most about - the _why_ matters more than the _what_.
+I added a My Visits page with a VisitsCalendar feature to record the visits and spending by date. The page displays restaurants visited, amount spent each day in the boxes of the calendar, it contains monthly and yearly modes that each presents total spending, visits and favorite restaurant.
+I chose to build this because it serves the main purpose of tracking Brennen's visits and spending in one page, and is visually clear and appealing such that it attracts users. Inspired by Alipay's calender tracker for daily financial investment gains/loss and the GitHub contributions graph, I decided calendar the best way to present the date number, spending number and restaurant(in form of picture background) all in one grid without being too messy. 
 
 ## 2. What did you decide, and what did you rule out?
 
 > Route shapes, data model, where the logic lives, what you deliberately didn't
 > do. Name a tradeoff you're not sure you got right.
+I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer. Thus I ruled out data models of nearby restaurants/map apis, etc.
+I merged my initial idea of My Visits and My Spending page together. So the route /api/spending is used for the my visits page in the 
 
 ## 3. Where did you cut corners?
 

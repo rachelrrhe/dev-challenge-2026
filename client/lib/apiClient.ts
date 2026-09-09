@@ -89,9 +89,3 @@ export async function deleteVisit(id: number): Promise<Response> {
   return fetch(`${API_URL}/api/visits/${id}`, { method: 'DELETE' });
 }
 
-/** Fetch the total-and-per-restaurant spending summary. */
-export async function getSpending(): Promise<SpendingSummary> {
-  const res = await fetch(`${API_URL}/api/spending`, { cache: 'no-store' });
-  return res.json();
-}
-
