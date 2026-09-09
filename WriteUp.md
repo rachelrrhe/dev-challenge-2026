@@ -1,12 +1,6 @@
 # Write-up
 
-> This is the skeleton - replace everything in blockquotes with your own words
-> and delete the prompts as you go. Aim for **~300 words** across the four
-> questions; the route reference below can be as long as it needs to be.
->
-> Write it like you're handing the work to a teammate. We'd rather read an
-> honest "I ran out of time on X and here's what I'd do" than a polished list of
-> accomplishments. **Submit this even if you didn't finish** - see CHALLENGE.md.
+I accidently merged the pull request. I have reverted it and then opened a new pull request. So there are three branches now. Please see the lastest pull request for my changes in PartB and the main branch for part A.
 
 ## 1. What did you build for Part B, and why that?
 I added a My Visits page with a VisitsCalendar feature to record the visits and spending by date. The page displays restaurants visited, amount spent each day in the boxes of the calendar, it contains monthly and yearly modes that each presents total spending, visits and favorite restaurant.
