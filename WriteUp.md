@@ -33,18 +33,45 @@ I used AI for many frontend features in this code, and I still think my current 
 | --------------- | ------------ | ------- | ------------ |
 | `Get /api/restaurants` | Return restaurant (added dish_photo and updated_at for each) | `200` + JSON array| - |
 | `POST /api/restaurants` | Create new restaurant (containing an optional dish_photo) | `201` + created restaurant | `400` if invalid input or duplicate|
-| `GET /api/restaurants/:id` and `PUT /api/restaurants/:id` and `DELETE /api/restaurants/:id`| ... same as before | same | same|
+| `GET /api/restaurants/:id` and `PUT /api/restaurants/:id` and `DELETE /api/restaurants/:id`| ... same as before(included updated_at and dish_photo) | same | same|
 | `PATCH /api/restaurants/:id` | Update updated_at and dish_photo restaurant if its revisited| `200` + updated restaurant| `400` if invalid input; `404` if missing restaurant |
 | `GET /api/visits`|Returns every visit, most recent first, with the restaurant name joined in | `200` + JSON array| - |
 | `POST /api/visits` |Record a new visit, updates the restaurant | `201` + created visit | `400` on invalid input; `404` if restaurant body don't exist|
 | `DELETE /api/visits/:id` | Delete a visit log (by clicking button on home page) | `204`, no body |`404` if missing or or invalid id |
 
+**`POST /api/visits`**
+
 ```jsonc
 // request
-{ }
+{ "restaurantId": 1, "amountSpent": 21, "dishPhoto": "data:image/png;base64,..." }
 
 // 201 response
-{ }
+{
+  "id": 7,
+  "restaurantId": 1,
+  "date": "2026-09-09",
+  "amountSpent": 21,
+  "notes": null,
+  "dishPhoto": "data:image/png;base64,...",
+  "createdAt": "2026-09-09T00:00:00.000Z"
+}
+```
+**`PATCH /api/restaurants/1`**
+```jsonc
+// request
+{"dishPhoto": "data:image/png;base64,..."}
+
+// 200 response
+{
+  "id": 1,
+  "name": "Example Restaurant",
+  "cuisine": "Chinese",
+  "address": "...",
+  "rating": 4.5,
+  "dishPhoto": "data:image/png;base64,...",
+  "createdAt": "2026-09-01T00:00:00.000Z",
+  "updatedAt": "2026-09-09T00:00:00.000Z"
+}
 ```
 
 ## Schema changes
