@@ -1,12 +1,18 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import blackHome from './img/BlackHome.png';
+import whiteHome from './img/WhiteHome.png';
+import blackVisits from './img/BlackVisits.png';
+import whiteVisits from './img/WhiteVisits.png';
 
-// Navigator bar for Restaurants and Visits
+// Navigator bar for Restaurants and Visits. Icon swaps black/white instead of
+// the button's text color changing, since the buttons no longer show text.
 const NAV_ITEMS = [
-  { href: '/', label: 'R', title: 'My Restaurants' },
-  { href: '/visits', label: 'V', title: 'My Visits' },
+  { href: '/', black: blackHome, white: whiteHome, title: 'My Restaurants' },
+  { href: '/visits', black: blackVisits, white: whiteVisits, title: 'My Visits' },
 ];
 
 export function BottomNav() {
@@ -25,11 +31,11 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               title={item.title}
-              className={`flex h-11 w-11 items-center justify-center rounded-full text-lg font-semibold ${
-                active ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'
+              className={`flex h-11 w-11 items-center justify-center rounded-full ${
+                active ? 'bg-gray-700' : 'bg-white'
               }`}
             >
-              {item.label}
+              <Image src={active ? item.white : item.black} alt={item.title} width={22} height={22} />
             </Link>
           );
         })}
@@ -44,4 +50,5 @@ export function BottomNav() {
     </>
   );
 }
+
 
