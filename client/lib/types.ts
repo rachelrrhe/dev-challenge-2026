@@ -32,8 +32,12 @@ export interface Restaurant {
   address: string | null;
   /** 0-5. A real number in JSON, not a string. */
   rating: number | null;
+  /** Data URL of the favorite dish photo, or null if none was uploaded. */
+  dishPhoto: string | null;
   /** ISO 8601 timestamp, e.g. "2026-01-01T00:00:00.000Z" */
   createdAt: string;
+  /** ISO 8601 timestamp of the last create/update. */
+  updatedAt: string;
 }
 
 export interface Visit {
@@ -43,6 +47,8 @@ export interface Visit {
   date: string;
   amountSpent: number | null;
   notes: string | null;
+  /** Data URL of the dish photo taken on this visit, or null if none. */
+  dishPhoto: string | null;
   /** ISO 8601 timestamp. */
   createdAt: string;
 }
@@ -80,7 +86,9 @@ export function toRestaurant(row: Record<string, unknown>): Restaurant {
     cuisine: (row.cuisine as string | null) ?? null,
     address: (row.address as string | null) ?? null,
     rating: num(row.rating),
+    dishPhoto: (row.dishPhoto as string | null) ?? null,
     createdAt: isoTimestamp(row.createdAt),
+    updatedAt: isoTimestamp(row.updatedAt),
   };
 }
 
@@ -92,6 +100,43 @@ export function toVisit(row: Record<string, unknown>): Visit {
     date: dateOnly(row.date),
     amountSpent: num(row.amountSpent),
     notes: (row.notes as string | null) ?? null,
+    dishPhoto: (row.dishPhoto as string | null) ?? null,
     createdAt: isoTimestamp(row.createdAt),
   };
+}
+
+/** A visit, with the restaurant's display fields joined in. */
+export interface VisitWithRestaurant extends Visit {
+  restaurantName: string;
+  restaurantCuisine: string | null;
+  restaurantAddress: string | null;
+  restaurantRating: number | null;
+}
+
+/** Convert a `visits` row (joined with `restaurants` fields) into the display shape. */
+export function toVisitWithRestaurant(row: Record<string, unknown>): VisitWithRestaurant {
+  return {
+    ...toVisit(row),
+    restaurantName: String(row.restaurantName),
+    restaurantCuisine: (row.restaurantCuisine as string | null) ?? null,
+    restaurantAddress: (row.restaurantAddress as string | null) ?? null,
+    restaurantRating: num(row.restaurantRating),
+  };
+}
+
+/** Total spend at one restaurant.
+ * I originally wanted to create a separate spending page for each restaurant but later gave up
+ * The interface was used to calculate spending summary.
+ */
+export interface RestaurantSpending {
+  restaurantId: number;
+  restaurantName: string;
+  visitCount: number;
+  totalSpent: number;
+}
+
+/** Spending summary across all restaurants. */
+export interface SpendingSummary {
+  totalSpent: number;
+  byRestaurant: RestaurantSpending[];
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { BottomNav } from './BottomNav';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -19,8 +20,11 @@ export default function RootLayout({
             <h1 className="text-xl font-semibold">Feeding Brennen</h1>
           </div>
         </header>
-        <main className="mx-auto max-w-3xl px-6 py-8">{children}</main>
+        <main className="mx-auto max-w-3xl px-6 py-8 pb-28">{children}</main>
+        <BottomNav />
       </body>
     </html>
   );
 }
+
+
