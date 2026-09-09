@@ -14,14 +14,12 @@ I chose to build this because it serves the main purpose of tracking Brennen's v
 
 ## 2. What did you decide, and what did you rule out?
 
-> Route shapes, data model, where the logic lives, what you deliberately didn't
-> do. Name a tradeoff you're not sure you got right.
-I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer. Thus I ruled out data models of nearby restaurants/map apis, etc.
-I merged my initial idea of My Visits and My Spending page together. So the route /api/spending is used for the my visits page in the 
+I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer. I added dish_photo for restaurants to make it more visually appealing and updated_at to distinct cases of revisiting the same restaurant.
+I merged my initial idea of My Visits and My Spending page together into the VisitsCalendar. So the route /api/spending and the spending types in apiClient were all abandoned. Instead I added VisitWithRestaurant, RestaurantSpending, and SpendingSummary interfaces for storing spending and number of visits by restaurant, date, and the sum.
 
 ## 3. Where did you cut corners?
 
-> What would you fix first with another day?
+I used AI for many frontend features in this code, and I still think my current way of storing spendingByRestaurant, spendingByDate in three interfaces is messy. I may edit the frontend more manually in the future, and also re-organize my way of storing Calendar data by maybe creating a seperate Month or Year table.
 
 ---
 
@@ -33,7 +31,7 @@ I merged my initial idea of My Visits and My Spending page together. So the rout
 
 | Method and path | What it does | Success | Errors       |
 | --------------- | ------------ | ------- | ------------ |
-| `GET /api/...`  |              | `200` + | `404` if ... |
+| `GET /api/visits`|List visit (joining restaurant info) from most recent in descending order | `200` if successful| -|
 | `POST /api/...` |              | `201` + | `400` on ... |
 
 **`POST /api/...`**
