@@ -8,7 +8,7 @@
  * The shapes these helpers return live in `lib/types.ts`, shared with the
  * handlers that produce them.
  */
-import type { Restaurant } from './types';
+import type { Restaurant, SpendingSummary, VisitWithRestaurant } from './types';
 
 // We read a base URL from the environment because Server Components fetch on
 // the server, where relative URLs don't resolve - so we need an absolute origin.
@@ -35,3 +35,63 @@ export async function getRestaurant(id: number | string): Promise<Restaurant> {
   const res = await fetch(`${API_URL}/api/restaurants/${id}`, { cache: 'no-store' });
   return res.json();
 }
+
+/** Create a new restaurant. Used by the Add page's "New" tab. */
+export async function createRestaurant(input: {
+  name: string;
+  cuisine: string;
+  address: string;
+  rating: number;
+  dishPhoto?: string | null;
+}): Promise<Response> {
+  return fetch(`${API_URL}/api/restaurants`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+}
+
+/** Update rating/dish photo on an existing restaurant. Used by the Add page's "Old" tab. */
+export async function patchRestaurant(
+  id: number,
+  input: { rating?: number; dishPhoto?: string | null }
+): Promise<Response> {
+  return fetch(`${API_URL}/api/restaurants/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+}
+
+/** Record a visit against a restaurant. Used by both tabs of the Add page. */
+export async function createVisit(input: {
+  restaurantId: number;
+  amountSpent: number;
+  date?: string;
+  notes?: string;
+  dishPhoto?: string | null;
+}): Promise<Response> {
+  return fetch(`${API_URL}/api/visits`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+}
+
+/** Fetch every visit (with restaurant name joined in), most recent first. */
+export async function getVisits(): Promise<VisitWithRestaurant[]> {
+  const res = await fetch(`${API_URL}/api/visits`, { cache: 'no-store' });
+  return res.json();
+}
+
+/** Delete a single visit entry. Used by the home page's delete button. */
+export async function deleteVisit(id: number): Promise<Response> {
+  return fetch(`${API_URL}/api/visits/${id}`, { method: 'DELETE' });
+}
+
+/** Fetch the total-and-per-restaurant spending summary. */
+export async function getSpending(): Promise<SpendingSummary> {
+  const res = await fetch(`${API_URL}/api/spending`, { cache: 'no-store' });
+  return res.json();
+}
+
