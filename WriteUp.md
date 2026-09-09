@@ -25,10 +25,6 @@ I used AI for many frontend features in this code, and I still think my current 
 
 ## Part B: routes
 
-> Every endpoint you added, with its request and response shapes, so we can
-> exercise it without reverse-engineering your code. Add or remove rows as
-> needed; delete this section if your Part B added no routes.
-
 | Method and path | What it does | Success | Errors       |
 | --------------- | ------------ | ------- | ------------ |
 | `Get /api/restaurants` | Return restaurant (added dish_photo and updated_at for each) | `200` + JSON array| - |
@@ -79,6 +75,7 @@ I used AI for many frontend features in this code, and I still think my current 
 > Any migrations you added (`002_*.sql`, ...), new tables or columns, and
 > anything a reviewer needs to run beyond `./setup.sh`. Write "none" if there
 > were none.
+Added `002_my_change.sql` for dish_photo and updated_at for the restaurants table.
 
 ## How I verified this
 
@@ -105,10 +102,58 @@ curl -i -X POST http://localhost:3000/api/restaurants \
 **Part B** - the equivalent cases for what you built:
 
 ```bash
+# Create a restaurant with a dish photo
+curl -i -X POST http://localhost:3000/api/restaurants \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Test Restaurant","cuisine":"Chinese","dishPhoto":"data:image/png;base64,..."}'
+# 201 + created restaurant with dishPhoto and updatedAt
+
+# Update a restaurant's dish photo
+curl -i -X PATCH http://localhost:3000/api/restaurants/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"dishPhoto":"data:image/png;base64,..."}'
+# 200 + updated restaurant with new dishPhoto and updatedAt
+
+# PATCH with invalid input
+curl -i -X PATCH http://localhost:3000/api/restaurants/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"dishPhoto":123}'
+# 400
+
+# PATCH a restaurant that does not exist
+curl -i -X PATCH http://localhost:3000/api/restaurants/99999 \
+  -H 'Content-Type: application/json' \
+  -d '{"dishPhoto":"data:image/png;base64,..."}'
+# 404
+
+# Record a new visit with a dish photo
+curl -i -X POST http://localhost:3000/api/visits \
+  -H 'Content-Type: application/json' \
+  -d '{"restaurantId":1,"amountSpent":21,"dishPhoto":"data:image/png;base64,..."}'
+# 201 + created visit; restaurant's dishPhoto and updatedAt are also updated
+
+# Record a visit for a restaurant that does not exist
+curl -i -X POST http://localhost:3000/api/visits \
+  -H 'Content-Type: application/json' \
+  -d '{"restaurantId":99999,"amountSpent":21}'
+# 404
+
+# Record a visit with invalid input
+curl -i -X POST http://localhost:3000/api/visits \
+  -H 'Content-Type: application/json' \
+  -d '{"restaurantId":1,"amountSpent":-5}'
+# 400
+
+# Verify visits are returned with dishPhoto and restaurant information
+curl -i http://localhost:3000/api/visits
+# 200 + JSON array
+
+# Delete a visit
+curl -i -X DELETE http://localhost:3000/api/visits/7
+# 204 + no body
 
 ```
 
 ## Known issues / what I'd do next
 
-> Anything broken, unfinished, or that you know is wrong. Being upfront here
-> costs you nothing and tells us a lot.
+There's an error in the dish_photo for restaurant. The script is returning 400 instead of 200 when it received the photo, but the app worked fine in the browser inspector.
