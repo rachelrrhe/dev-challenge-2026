@@ -12,6 +12,10 @@
 I added a My Visits page with a VisitsCalendar feature to record the visits and spending by date. The page displays restaurants visited, amount spent each day in the boxes of the calendar, it contains monthly and yearly modes that each presents total spending, visits and favorite restaurant.
 I chose to build this because it serves the main purpose of tracking Brennen's visits and spending in one page, and is visually clear and appealing such that it attracts users. Inspired by Alipay's calender tracker for daily financial investment gains/loss and the GitHub contributions graph, I decided calendar the best way to present the date number, spending number and restaurant(in form of picture background) all in one grid without being too messy. 
 
+### Screenshots
+![Before Add](screenshots/Before.png)
+![After Add](screenshots/After.png)
+
 ## 2. What did you decide, and what did you rule out?
 
 I decided to cut functions like search/map/online rating posting due to time issues and because they are common in other food apps but do not related to this app's purpose as a personal tracker instead of an social explorer so I abandoned the notes in visits table. I added dish_photo for restaurants to make it more visually appealing and updated_at to distinct cases of revisiting the same restaurant.
@@ -93,10 +97,8 @@ curl -i -X POST http://localhost:3000/api/restaurants \
   -d '{"name":"Out Of Range","rating":6}'              # 400
 ```
 
+
 **Part B** - the equivalent cases for what you built:
-**Screenshots:**
-![Before Add](screenshots/Before.png)
-![After Add](screenshots/After.png)
 
 ```bash
 # Create a restaurant with a dish photo
