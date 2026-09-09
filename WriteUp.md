@@ -79,12 +79,6 @@ Added `002_my_change.sql` for dish_photo and updated_at for the restaurants tabl
 
 ## How I verified this
 
-> How you checked your work - the happy paths _and_ the failures. `curl`
-> commands, a Postman collection, a scratch script, screenshots: whatever you
-> actually used. Paste the commands.
->
-> This is much faster for us to review than working it out ourselves, and it's
-> how you show you checked the edge cases.
 
 **Part A** - the contract table in CHALLENGE.md, every row including the error
 cases:
@@ -100,6 +94,9 @@ curl -i -X POST http://localhost:3000/api/restaurants \
 ```
 
 **Part B** - the equivalent cases for what you built:
+Screenshots:
+![Before Add](screenshots/Before.png)
+![After Add](screenshots/After.png)
 
 ```bash
 # Create a restaurant with a dish photo
